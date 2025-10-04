@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokéFind - National Dex Pokémon Finder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Filters Section -->
+        <aside class="filters-section">
+            <h1>PokéFind</h1>
+            <p class="subtitle">National Dex (Gen 1-9)</p>
+            
+            <div class="filter-group">
+                <label for="ability-filter">Ability</label>
+                <div class="dropdown-container">
+                    <input 
+                        type="text" 
+                        id="ability-filter" 
+                        class="filter-input" 
+                        placeholder="Search abilities..."
+                        autocomplete="off"
+                    >
+                    <div id="ability-dropdown" class="dropdown-list"></div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Move Categories</label>
+                <button class="category-toggle" id="category-toggle">
+                    <span>Show Categories</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="categories-container" id="categories-container">
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-ohko" value="ohko">
+                        <label for="cat-ohko">OHKO Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-multi-hit" value="multi-hit">
+                        <label for="cat-multi-hit">Multi-hit Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-recoil" value="recoil">
+                        <label for="cat-recoil">Recoil Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-draining" value="draining">
+                        <label for="cat-draining">Draining Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-binding" value="binding">
+                        <label for="cat-binding">Binding Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-priority" value="priority">
+                        <label for="cat-priority">Priority Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-status-sleep" value="status-sleep">
+                        <label for="cat-status-sleep">Sleep Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-status-paralyze" value="status-paralyze">
+                        <label for="cat-status-paralyze">Paralyze Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-status-burn" value="status-burn">
+                        <label for="cat-status-burn">Burn Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-status-freeze" value="status-freeze">
+                        <label for="cat-status-freeze">Freeze Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-status-poison" value="status-poison">
+                        <label for="cat-status-poison">Poison Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-stat-boost" value="stat-boost">
+                        <label for="cat-stat-boost">Stat-boosting Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-stat-lower" value="stat-lower">
+                        <label for="cat-stat-lower">Stat-lowering Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-switching" value="switching">
+                        <label for="cat-switching">Switching Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-hazards" value="hazards">
+                        <label for="cat-hazards">Entry Hazards</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-weather" value="weather">
+                        <label for="cat-weather">Weather Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-terrain" value="terrain">
+                        <label for="cat-terrain">Terrain Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-healing" value="healing">
+                        <label for="cat-healing">Healing Moves</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="cat-protection" value="protection">
+                        <label for="cat-protection">Protection Moves</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label for="move-filter-1">Move 1</label>
+                <div class="dropdown-container">
+                    <input 
+                        type="text" 
+                        id="move-filter-1" 
+                        class="filter-input move-filter" 
+                        placeholder="Search moves..."
+                        autocomplete="off"
+                    >
+                    <div id="move-dropdown-1" class="dropdown-list"></div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label for="move-filter-2">Move 2</label>
+                <div class="dropdown-container">
+                    <input 
+                        type="text" 
+                        id="move-filter-2" 
+                        class="filter-input move-filter" 
+                        placeholder="Search moves..."
+                        autocomplete="off"
+                    >
+                    <div id="move-dropdown-2" class="dropdown-list"></div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label for="move-filter-3">Move 3</label>
+                <div class="dropdown-container">
+                    <input 
+                        type="text" 
+                        id="move-filter-3" 
+                        class="filter-input move-filter" 
+                        placeholder="Search moves..."
+                        autocomplete="off"
+                    >
+                    <div id="move-dropdown-3" class="dropdown-list"></div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label for="move-filter-4">Move 4</label>
+                <div class="dropdown-container">
+                    <input 
+                        type="text" 
+                        id="move-filter-4" 
+                        class="filter-input move-filter" 
+                        placeholder="Search moves..."
+                        autocomplete="off"
+                    >
+                    <div id="move-dropdown-4" class="dropdown-list"></div>
+                </div>
+            </div>
+
+            <button id="clear-filters" class="clear-btn">Clear All Filters</button>
+        </aside>
+
+        <!-- Results Section -->
+        <main class="results-section">
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading Pokémon data...</p>
+            </div>
+
+            <div id="error" class="error hidden">
+                <p>Error loading data. Please refresh the page.</p>
+            </div>
+
+            <div id="results-container" class="hidden">
+                <div class="results-header">
+                    <h2>Results</h2>
+                    <p id="results-count" class="results-count"></p>
+                </div>
+
+                <div class="table-container">
+                    <div id="no-results" class="no-results hidden">
+                        <p>No matching Pokémon</p>
+                    </div>
+
+                    <div id="empty-state" class="empty-state">
+                        <p>Select a filter to begin!</p>
+                    </div>
+
+                    <table id="pokemon-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="sprite">Sprite</th>
+                                <th data-sort="name">Name <span class="sort-icon"></span></th>
+                                <th data-sort="type1">Type 1 <span class="sort-icon"></span></th>
+                                <th data-sort="type2">Type 2 <span class="sort-icon"></span></th>
+                                <th data-sort="hp">HP <span class="sort-icon"></span></th>
+                                <th data-sort="attack">ATK <span class="sort-icon"></span></th>
+                                <th data-sort="defense">DEF <span class="sort-icon"></span></th>
+                                <th data-sort="specialAttack">SPATK <span class="sort-icon"></span></th>
+                                <th data-sort="specialDefense">SPDEF <span class="sort-icon"></span></th>
+                                <th data-sort="speed">SPD <span class="sort-icon"></span></th>
+                                <th data-sort="bst">BST <span class="sort-icon"></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pokemon-tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
