@@ -112,7 +112,7 @@ async function fetchPokemonData() {
         const progress = Math.min(100, Math.floor((i / totalPokemon) * 100));
         const loadingText = document.querySelector('.loading p');
         if (loadingText) {
-            loadingText.textContent = `Loading Pokémon data... ${progress}%`;
+            loadingText.textContent = `Loading Mons data... ${progress}%`;
         }
     }
     
@@ -302,7 +302,7 @@ function updateDisplay() {
         pokemonTbody.innerHTML = '';
         noResultsElement.classList.add('hidden');
         emptyStateElement.classList.remove('hidden');
-        resultsCount.textContent = `${allPokemon.length} Pokémon available`;
+        resultsCount.textContent = `${allPokemon.length} Mons available`;
         return;
     }
     
@@ -314,7 +314,7 @@ function updateDisplay() {
         pokemonTable.classList.add('disabled-sort');
         pokemonTbody.innerHTML = '';
         noResultsElement.classList.remove('hidden');
-        resultsCount.textContent = '0 Pokémon found';
+        resultsCount.textContent = '0 Mons found';
     } else {
         // Show table with results
         pokemonTable.classList.remove('disabled-sort');
@@ -322,7 +322,7 @@ function updateDisplay() {
         
         displayedRows = 0;
         renderTable(filteredPokemon, true);
-        resultsCount.textContent = `${filteredPokemon.length} Pokémon found`;
+        resultsCount.textContent = `${filteredPokemon.length} Mons found`;
     }
 }
 
