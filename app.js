@@ -349,18 +349,22 @@ function renderTable(pokemon, reset = false) {
         
         const bst = Object.values(p.stats).reduce((sum, stat) => sum + stat, 0);
         
+        // Get type icon URLs from PokeAPI
+        const type1IconUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/brilliant-diamond-and-shining-pearl/${getTypeId(p.types[0])}.png`;
+        const type2IconUrl = p.types[1] ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/brilliant-diamond-and-shining-pearl/${getTypeId(p.types[1])}.png` : null;
+        
         row.innerHTML = `
-            <td><img src="${p.sprite}" alt="${p.name}" class="pokemon-sprite"></td>
+            <td class="hide-mobile"><img src="${p.sprite}" alt="${p.name}" class="pokemon-sprite"></td>
             <td class="pokemon-name">${formatName(p.name)}</td>
-            <td><span class="type-badge type-${p.types[0]}">${formatName(p.types[0])}</span></td>
-            <td>${p.types[1] ? `<span class="type-badge type-${p.types[1]}">${formatName(p.types[1])}</span>` : ''}</td>
+            <td><img src="${type1IconUrl}" alt="${p.types[0]}" class="type-icon" title="${formatName(p.types[0])}"></td>
+            <td>${type2IconUrl ? `<img src="${type2IconUrl}" alt="${p.types[1]}" class="type-icon" title="${formatName(p.types[1])}">` : ''}</td>
             <td class="stat-cell">${p.stats.hp}</td>
             <td class="stat-cell">${p.stats.attack}</td>
             <td class="stat-cell">${p.stats.defense}</td>
             <td class="stat-cell">${p.stats.specialAttack}</td>
             <td class="stat-cell">${p.stats.specialDefense}</td>
             <td class="stat-cell">${p.stats.speed}</td>
-            <td class="bst-cell">${bst}</td>
+            <td class="bst-cell hide-mobile">${bst}</td>
         `;
         
         pokemonTbody.appendChild(row);
@@ -434,6 +438,17 @@ function sortPokemon(pokemon, column, direction) {
 
 // Setup event listeners
 function setupEventListeners() {
+    // Mobile filter toggle
+    const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
+    const filtersSection = document.getElementById('filters-section');
+    
+    if (mobileFilterToggle) {
+        mobileFilterToggle.addEventListener('click', () => {
+            filtersSection.classList.toggle('show');
+            mobileFilterToggle.classList.toggle('active');
+        });
+    }
+    
     // Category toggle
     const categoryToggle = document.getElementById('category-toggle');
     const categoriesContainer = document.getElementById('categories-container');
@@ -518,6 +533,31 @@ function formatName(name) {
     return name.split('-').map(word => 
         word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
+}
+
+function getTypeId(typeName) {
+    // Map type names to their PokeAPI IDs for icon URLs
+    const typeMap = {
+        'normal': 1,
+        'fighting': 2,
+        'flying': 3,
+        'poison': 4,
+        'ground': 5,
+        'rock': 6,
+        'bug': 7,
+        'ghost': 8,
+        'steel': 9,
+        'fire': 10,
+        'water': 11,
+        'grass': 12,
+        'electric': 13,
+        'psychic': 14,
+        'ice': 15,
+        'dragon': 16,
+        'dark': 17,
+        'fairy': 18
+    };
+    return typeMap[typeName] || 1;
 }
 
 function hideLoading() {
