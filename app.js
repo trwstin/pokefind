@@ -339,6 +339,9 @@ function renderTable(pokemon, reset = false) {
         sortedPokemon = sortPokemon(sortedPokemon, currentSort.column, currentSort.direction);
     }
     
+    // Check if mobile view
+    const isMobile = window.innerWidth <= 768;
+    
     // Load initial batch or next batch
     const startIdx = displayedRows;
     const endIdx = Math.min(startIdx + ROWS_PER_LOAD, sortedPokemon.length);
@@ -349,11 +352,19 @@ function renderTable(pokemon, reset = false) {
         
         const bst = Object.values(p.stats).reduce((sum, stat) => sum + stat, 0);
         
+        // Use abbreviated type names on mobile
+        const type1Text = isMobile ? getTypeAbbreviation(p.types[0]) : formatName(p.types[0]);
+        const type2Text = p.types[1] ? (isMobile ? getTypeAbbreviation(p.types[1]) : formatName(p.types[1])) : '';
+        
+        // Stack types vertically in a single column
+        const typeDisplay = p.types[1] 
+            ? `<span class="type-badge type-${p.types[0]}">${type1Text}</span><br><span class="type-badge type-${p.types[1]}">${type2Text}</span>`
+            : `<span class="type-badge type-${p.types[0]}">${type1Text}</span>`;
+        
         row.innerHTML = `
-            <td><img src="${p.sprite}" alt="${p.name}" class="pokemon-sprite"></td>
+            <td class="sprite-cell"><img src="${p.sprite}" alt="${p.name}" class="pokemon-sprite"></td>
             <td class="pokemon-name">${formatName(p.name)}</td>
-            <td><span class="type-badge type-${p.types[0]}">${formatName(p.types[0])}</span></td>
-            <td>${p.types[1] ? `<span class="type-badge type-${p.types[1]}">${formatName(p.types[1])}</span>` : ''}</td>
+            <td class="type-column">${typeDisplay}</td>
             <td class="stat-cell">${p.stats.hp}</td>
             <td class="stat-cell">${p.stats.attack}</td>
             <td class="stat-cell">${p.stats.defense}</td>
@@ -383,10 +394,6 @@ function sortPokemon(pokemon, column, direction) {
             case 'type1':
                 aValue = a.types[0];
                 bValue = b.types[0];
-                break;
-            case 'type2':
-                aValue = a.types[1] || '';
-                bValue = b.types[1] || '';
                 break;
             case 'hp':
                 aValue = a.stats.hp;
@@ -434,6 +441,17 @@ function sortPokemon(pokemon, column, direction) {
 
 // Setup event listeners
 function setupEventListeners() {
+    // Mobile filter toggle
+    const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
+    const filtersSection = document.getElementById('filters-section');
+    
+    if (mobileFilterToggle) {
+        mobileFilterToggle.addEventListener('click', () => {
+            mobileFilterToggle.classList.toggle('expanded');
+            filtersSection.classList.toggle('show');
+        });
+    }
+    
     // Category toggle
     const categoryToggle = document.getElementById('category-toggle');
     const categoriesContainer = document.getElementById('categories-container');
@@ -518,6 +536,40 @@ function formatName(name) {
     return name.split('-').map(word => 
         word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
+}
+
+function getTypeAbbreviation(typeName) {
+    const abbreviations = {
+        'normal': 'NRM',
+        'fire': 'FIR',
+        'water': 'WTR',
+        'electric': 'ELC',
+        'grass': 'GRS',
+        'ice': 'ICE',
+        'fighting': 'FGT',
+        'poison': 'PSN',
+        'ground': 'GRD',
+        'flying': 'FLY',
+        'psychic': 'PSY',
+        'bug': 'BUG',
+        'rock': 'RCK',
+        'ghost': 'GHT',
+        'dragon': 'DRG',
+        'dark': 'DRK',
+        'steel': 'STL',
+        'fairy': 'FRY'
+    };
+    return abbreviations[typeName] || typeName.substring(0, 3).toUpperCase();
+}
+
+function getTypeId(typeName) {
+    const typeIds = {
+        'normal': 1, 'fighting': 2, 'flying': 3, 'poison': 4, 'ground': 5,
+        'rock': 6, 'bug': 7, 'ghost': 8, 'steel': 9, 'fire': 10,
+        'water': 11, 'grass': 12, 'electric': 13, 'psychic': 14, 'ice': 15,
+        'dragon': 16, 'dark': 17, 'fairy': 18
+    };
+    return typeIds[typeName] || 1;
 }
 
 function hideLoading() {

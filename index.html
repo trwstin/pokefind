@@ -9,10 +9,21 @@
 </head>
 <body>
     <div class="container">
+        <!-- Mobile Filter Toggle -->
+        <button class="mobile-filter-toggle" id="mobile-filter-toggle">
+            <span class="mobile-header-title">FindMons</span>
+            <div class="mobile-toggle-right">
+                <span class="mobile-toggle-text">Filters</span>
+                <span class="mobile-toggle-icon">▼</span>
+            </div>
+        </button>
+
         <!-- Filters Section -->
-        <aside class="filters-section">
-            <h1>FindMons</h1>
-            <p class="subtitle">National Dex (Gen 1-9)</p>
+        <aside class="filters-section" id="filters-section">
+            <div class="desktop-header">
+                <h1>FindMons</h1>
+                <p class="subtitle">National Dex (Gen 1-9)</p>
+            </div>
             
             <div class="filter-group">
                 <label for="ability-filter">Ability</label>
@@ -202,17 +213,16 @@
                     <table id="pokemon-table">
                         <thead>
                             <tr>
-                                <th data-sort="sprite">Sprite</th>
-                                <th data-sort="name">Name <span class="sort-icon"></span></th>
-                                <th data-sort="type1">Type 1 <span class="sort-icon"></span></th>
-                                <th data-sort="type2">Type 2 <span class="sort-icon"></span></th>
-                                <th data-sort="hp">HP <span class="sort-icon"></span></th>
-                                <th data-sort="attack">ATK <span class="sort-icon"></span></th>
-                                <th data-sort="defense">DEF <span class="sort-icon"></span></th>
-                                <th data-sort="specialAttack">SPATK <span class="sort-icon"></span></th>
-                                <th data-sort="specialDefense">SPDEF <span class="sort-icon"></span></th>
-                                <th data-sort="speed">SPD <span class="sort-icon"></span></th>
-                                <th data-sort="bst">BST <span class="sort-icon"></span></th>
+                                <th data-sort="sprite" class="sprite-col">Sprite</th>
+                                <th data-sort="name">Name<br><span class="sort-icon"></span></th>
+                                <th data-sort="type1">Type<br><span class="sort-icon"></span></th>
+                                <th data-sort="hp">HP<br><span class="sort-icon"></span></th>
+                                <th data-sort="attack">ATK<br><span class="sort-icon"></span></th>
+                                <th data-sort="defense">DEF<br><span class="sort-icon"></span></th>
+                                <th data-sort="specialAttack">SPATK<br><span class="sort-icon"></span></th>
+                                <th data-sort="specialDefense">SPDEF<br><span class="sort-icon"></span></th>
+                                <th data-sort="speed">SPD<br><span class="sort-icon"></span></th>
+                                <th data-sort="bst" class="bst-col">BST<br><span class="sort-icon"></span></th>
                             </tr>
                         </thead>
                         <tbody id="pokemon-tbody">
