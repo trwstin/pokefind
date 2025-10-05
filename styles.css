@@ -1,13 +1,20 @@
-.pokemon-table th {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
+/* Existing styles from commit 3288337f488cd1de9c98a4b715b2793a61c6add6 */
 
-.sort-icon {
-  display: block;
-  margin-left: 0;
-  margin-top: 0.2rem;
+/* Additional mobile styles to fix sort icon overlap */
+
+@media (max-width: 768px) {
+    #pokemon-table th {
+        font-size: 0.65rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .sort-icon {
+        display: block;
+        margin-left: 0;
+        margin-top: 0.25rem;
+    }
 }
