@@ -478,15 +478,20 @@ th.sort-desc .sort-icon::after {
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
+        height: auto;
+        overflow-y: auto;
     }
 
     .filters-section {
         width: 100%;
         min-width: auto;
+        height: auto;
     }
 
     .results-section {
         padding: 1rem;
+        height: auto;
+        overflow: visible;
     }
 
     #pokemon-table {
