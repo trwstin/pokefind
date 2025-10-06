@@ -169,9 +169,9 @@ function setupAbilityDropdown() {
     });
     
     input.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
+        const searchTerm = e.target.value.toLowerCase().replace(/\s+/g, '-');
         const filtered = Array.from(allAbilities)
-            .filter(ability => ability.includes(searchTerm))
+            .filter(ability => ability.replace(/\s+/g, '-').includes(searchTerm))
             .sort();
         populateDropdown(dropdown, filtered, selectedAbility);
     });
@@ -196,9 +196,9 @@ function setupMoveDropdowns() {
         });
         
         input.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
+            const searchTerm = e.target.value.toLowerCase().replace(/\s+/g, '-');
             const filtered = Array.from(allMoves)
-                .filter(move => move.includes(searchTerm))
+                .filter(move => move.replace(/\s+/g, '-').includes(searchTerm))
                 .sort();
             populateDropdown(dropdown, filtered, selectedMoves[index], true, index);
         });
