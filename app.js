@@ -163,12 +163,12 @@ function setupDropdowns() {
 function setupAbilityDropdown() {
     const input = document.getElementById('ability-filter');
     const dropdown = document.getElementById('ability-dropdown');
+    const clearBtn = document.getElementById('clear-ability');
     
-    input.addEventListener('focus', () => {
-        populateDropdown(dropdown, Array.from(allAbilities).sort(), selectedAbility);
-    });
-    
+    // Show/hide clear button
     input.addEventListener('input', (e) => {
+        clearBtn.style.display = e.target.value ? 'block' : 'none';
+        
         const searchTerm = e.target.value.toLowerCase().replace(/\s+/g, '-');
         const filtered = Array.from(allAbilities)
             .filter(ability => ability.replace(/\s+/g, '-').includes(searchTerm))
@@ -176,9 +176,22 @@ function setupAbilityDropdown() {
         populateDropdown(dropdown, filtered, selectedAbility);
     });
     
+    // Clear button click
+    clearBtn.addEventListener('click', () => {
+        input.value = '';
+        clearBtn.style.display = 'none';
+        selectedAbility = null;
+        dropdown.classList.remove('show');
+        applyFilters();
+    });
+    
+    input.addEventListener('focus', () => {
+        populateDropdown(dropdown, Array.from(allAbilities).sort(), selectedAbility);
+    });
+    
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
-        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+        if (!input.contains(e.target) && !dropdown.contains(e.target) && !clearBtn.contains(e.target)) {
             dropdown.classList.remove('show');
         }
     });
@@ -190,12 +203,12 @@ function setupMoveDropdowns() {
     
     moveInputs.forEach((input, index) => {
         const dropdown = document.getElementById(`move-dropdown-${index + 1}`);
+        const clearBtn = document.getElementById(`clear-move-${index + 1}`);
         
-        input.addEventListener('focus', () => {
-            populateDropdown(dropdown, Array.from(allMoves).sort(), selectedMoves[index], true, index);
-        });
-        
+        // Show/hide clear button
         input.addEventListener('input', (e) => {
+            clearBtn.style.display = e.target.value ? 'block' : 'none';
+            
             const searchTerm = e.target.value.toLowerCase().replace(/\s+/g, '-');
             const filtered = Array.from(allMoves)
                 .filter(move => move.replace(/\s+/g, '-').includes(searchTerm))
@@ -203,9 +216,22 @@ function setupMoveDropdowns() {
             populateDropdown(dropdown, filtered, selectedMoves[index], true, index);
         });
         
+        // Clear button click
+        clearBtn.addEventListener('click', () => {
+            input.value = '';
+            clearBtn.style.display = 'none';
+            selectedMoves[index] = null;
+            dropdown.classList.remove('show');
+            applyFilters();
+        });
+        
+        input.addEventListener('focus', () => {
+            populateDropdown(dropdown, Array.from(allMoves).sort(), selectedMoves[index], true, index);
+        });
+        
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
-            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target) && !clearBtn.contains(e.target)) {
                 dropdown.classList.remove('show');
             }
         });
