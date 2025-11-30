@@ -83,58 +83,101 @@ async function init() {
     }
 }
 
-// Fetch all Pokemon data from Gen 1-9 from PokeAPI
+// Fetch all Pokemon data (default + selected alternate forms) from PokeAPI
 async function fetchPokemonData() {
-    // All Pokemon from Gen 1-9 (National Dex: 1-1025)
-    // This includes all forms and variations
-    const totalPokemon = 1025;
-    const promises = [];
-
-    // Fetch in batches to avoid overwhelming the API
-    const batchSize = 50;
-    for (let i = 1; i <= totalPokemon; i += batchSize) {
-        const batchPromises = [];
-        for (let id = i; id < Math.min(i + batchSize, totalPokemon + 1); id++) {
-            batchPromises.push(fetchPokemon(id));
+    try {
+        // Fetch all species so we can inspect their varieties (forms)
+        const speciesResponse = await fetch('https://pokeapi.co/api/v2/pokemon-species?limit=10000');
+        if (!speciesResponse.ok) {
+            throw new Error('Failed to fetch pokemon species list');
         }
-        const batchResults = await Promise.all(batchPromises);
-        batchResults.forEach(pokemon => {
-            if (pokemon) {
-                // Check for duplicates by ID (some Pokemon have multiple forms)
-                const existingIndex = allPokemon.findIndex(p => p.id === pokemon.id);
-                if (existingIndex === -1) {
+
+        const speciesData = await speciesResponse.json();
+        const pokemonUrls = new Set();
+
+        // For each species, fetch its details to see all varieties
+        for (let i = 0; i < speciesData.results.length; i++) {
+            const speciesEntry = speciesData.results[i];
+            try {
+                const speciesDetailResponse = await fetch(speciesEntry.url);
+                if (!speciesDetailResponse.ok) continue;
+
+                const species = await speciesDetailResponse.json();
+
+                species.varieties.forEach(v => {
+                    const name = v.pokemon.name;
+                    const isDefault = v.is_default;
+                    const isMega = name.includes('-mega');
+                    const isRegional =
+                        name.includes('-alola') ||
+                        name.includes('-galar') ||
+                        name.includes('-hisui') ||
+                        name.includes('-paldea');
+
+                    // Include default forms plus mega and regional forms
+                    if (isDefault || isMega || isRegional) {
+                        pokemonUrls.add(v.pokemon.url);
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching species details:', speciesEntry.url, error);
+            }
+
+            // Update loading text with rough progress while scanning species
+            const progress = Math.min(50, Math.floor((i / speciesData.results.length) * 50));
+            const loadingText = document.querySelector('.loading p');
+            if (loadingText) {
+                loadingText.textContent = `Loading Mons data... ${progress}%`;
+            }
+        }
+
+        const urlsArray = Array.from(pokemonUrls);
+        const total = urlsArray.length;
+        const batchSize = 50;
+
+        for (let i = 0; i < total; i += batchSize) {
+            const batch = urlsArray.slice(i, i + batchSize);
+            const batchResults = await Promise.all(batch.map(url => fetchPokemonByUrl(url)));
+
+            batchResults.forEach(pokemon => {
+                if (!pokemon) return;
+                // Use name as unique key since some forms may share numeric IDs
+                if (!allPokemon.some(p => p.name === pokemon.name)) {
                     allPokemon.push(pokemon);
                 }
+            });
+
+            // Update loading text with progress for fetching pokemon data (50-100%)
+            const progress = 50 + Math.min(50, Math.floor((i / total) * 50));
+            const loadingText = document.querySelector('.loading p');
+            if (loadingText) {
+                loadingText.textContent = `Loading Mons data... ${progress}%`;
             }
-        });
-        
-        // Update loading text with progress
-        const progress = Math.min(100, Math.floor((i / totalPokemon) * 100));
-        const loadingText = document.querySelector('.loading p');
-        if (loadingText) {
-            loadingText.textContent = `Loading Mons data... ${progress}%`;
         }
+
+        // Extract all unique abilities and moves
+        allPokemon.forEach(pokemon => {
+            pokemon.abilities.forEach(ability => allAbilities.add(ability));
+            pokemon.moves.forEach(move => allMoves.add(move));
+        });
+    } catch (error) {
+        console.error('Error fetching pokemon data:', error);
+        throw error;
     }
-    
-    // Extract all unique abilities and moves
-    allPokemon.forEach(pokemon => {
-        pokemon.abilities.forEach(ability => allAbilities.add(ability));
-        pokemon.moves.forEach(move => allMoves.add(move));
-    });
 }
 
-// Fetch individual Pokemon data
-async function fetchPokemon(id) {
+// Fetch individual Pokemon data by URL
+async function fetchPokemonByUrl(url) {
     try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+        const response = await fetch(url);
         if (!response.ok) return null;
-        
+
         const data = await response.json();
-        
+
         return {
             id: data.id,
             name: data.name,
-            sprite: data.sprites.front_default || data.sprites.other['official-artwork'].front_default,
+            sprite: data.sprites.front_default || (data.sprites.other && data.sprites.other['official-artwork'] && data.sprites.other['official-artwork'].front_default) || '',
             types: data.types.map(t => t.type.name),
             abilities: data.abilities.map(a => a.ability.name),
             moves: data.moves.map(m => m.move.name),
@@ -148,7 +191,7 @@ async function fetchPokemon(id) {
             }
         };
     } catch (error) {
-        console.error(`Error fetching Pokemon ${id}:`, error);
+        console.error('Error fetching Pokemon by URL:', url, error);
         return null;
     }
 }
